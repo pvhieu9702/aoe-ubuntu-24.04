@@ -8,8 +8,11 @@ GAME_DIR_LOCAL="./game"
 GAME_ZIP="$GAME_DIR_LOCAL/AOEFULL.zip"
 
 WINE_PREFIX="$HOME/.wine-aoe"
-GAME_DIR="$WINE_PREFIX/drive_c/Program Files/AOEFULL"
+GAME_DIR="$WINE_PREFIX/drive_c/Program Files"
 DESKTOP_FILE="$HOME/.local/share/applications/aoe-ror.desktop"
+
+UBUNTU_CODENAME="$(. /etc/os-release && echo "$VERSION_CODENAME")"
+WINEHQ_SOURCE="/etc/apt/sources.list.d/winehq-${UBUNTU_CODENAME}.sources"
 
 echo "=== Install dependencies ==="
 
@@ -21,9 +24,9 @@ if [ ! -f /etc/apt/keyrings/winehq-archive.key ]; then
     https://dl.winehq.org/wine-builds/winehq.key
 fi
 
-if [ ! -f /etc/apt/sources.list.d/winehq-noble.sources ]; then
-    sudo wget -NP /etc/apt/sources.list.d/ \
-    https://dl.winehq.org/wine-builds/ubuntu/dists/noble/winehq-noble.sources
+if [ ! -f "$WINEHQ_SOURCE" ]; then
+    sudo wget -O "$WINEHQ_SOURCE" \
+    "https://dl.winehq.org/wine-builds/ubuntu/dists/${UBUNTU_CODENAME}/winehq-${UBUNTU_CODENAME}.sources"
 fi
 
 sudo apt update
