@@ -2,7 +2,11 @@
 
 set -e
 
-GAME_ZIP="./game/AOEFULL.zip"
+GAME_ZIP_URL="https://github.com/pvhieu9702/aoe-ubuntu-24.04/raw/refs/heads/master/game/AOEFULL.zip"
+
+GAME_DIR_LOCAL="./game"
+GAME_ZIP="$GAME_DIR_LOCAL/AOEFULL.zip"
+
 WINE_PREFIX="$HOME/.wine-aoe"
 GAME_DIR="$WINE_PREFIX/drive_c/Program Files/AOEFULL"
 DESKTOP_FILE="$HOME/.local/share/applications/aoe-ror.desktop"
@@ -23,7 +27,7 @@ if [ ! -f /etc/apt/sources.list.d/winehq-noble.sources ]; then
 fi
 
 sudo apt update
-sudo apt install -y --install-recommends winehq-stable winetricks unzip
+sudo apt install -y --install-recommends winehq-stable winetricks unzip curl
 
 echo "=== Wine version ==="
 wine --version
@@ -40,6 +44,16 @@ fi
 echo "=== Install DirectPlay ==="
 
 WINEPREFIX="$WINE_PREFIX" winetricks -q directplay
+
+echo "=== Download game zip ==="
+
+mkdir -p "$GAME_DIR_LOCAL"
+
+if [ ! -f "$GAME_ZIP" ]; then
+    curl -L --fail --progress-bar "$GAME_ZIP_URL" -o "$GAME_ZIP"
+else
+    echo "Game zip already exists: $GAME_ZIP"
+fi
 
 echo "=== Extract game ==="
 
