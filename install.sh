@@ -2,7 +2,7 @@
 
 set -e
 
-GAME_ZIP_URL="https://github.com/pvhieu9702/aoe-ubuntu-24.04/raw/refs/heads/master/game/AOEFULL.zip"
+GAME_ZIP_URL="https://github.com/pvhieu9702/aoe-ubuntu-24.04/raw/refs/heads/master/AOEFULL.zip"
 
 GAME_DIR_LOCAL="./game"
 GAME_ZIP="$GAME_DIR_LOCAL/AOEFULL.zip"
@@ -52,11 +52,10 @@ echo "=== Download game zip ==="
 
 mkdir -p "$GAME_DIR_LOCAL"
 
-if [ ! -f "$GAME_ZIP" ]; then
-    curl -L --fail --progress-bar "$GAME_ZIP_URL" -o "$GAME_ZIP"
-else
-    echo "Game zip already exists: $GAME_ZIP"
+if [ -f "$GAME_ZIP" ]; then
+    rm -f "$GAME_ZIP"
 fi
+curl -L --fail --progress-bar "$GAME_ZIP_URL" -o "$GAME_ZIP"
 
 echo "=== Extract game ==="
 
@@ -65,10 +64,11 @@ if [ ! -f "$GAME_ZIP" ]; then
     exit 1
 fi
 
-rm -rf "$GAME_DIR"
-mkdir -p "$GAME_DIR"
+rm -rf "$GAME_DIR/AOEFULL"
+mkdir -p "$GAME_DIR/AOEFULL"
 
 unzip -q "$GAME_ZIP" -d "$GAME_DIR"
+rm -f "$GAME_ZIP"
 
 echo "=== Configure firewall ==="
 
